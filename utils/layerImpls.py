@@ -17,9 +17,9 @@ class SelfAttentionLayer(nn.Module):
         self.wo = nn.Parameter(torch.randn(d_k * h, d_model))
 
     def forward(self, x):                 # x is (Batch x d_model)
-        q = torch.matmul(x, self.wq)      # q is (Batch x h x d_k)   Every head will have it's own query vector
-        k = torch.matmul(x, self.wk)      # k is (Batch x h x d_k)
-        v = torch.matmul(x, self.wv)      # v is (Batch x h x d_k)
+        q = torch.matmul(x, self.wq)      # q is (h, B, d_k)   Every head will have it's own query vector
+        k = torch.matmul(x, self.wk)      # k is (h, B, d_k)
+        v = torch.matmul(x, self.wv)      # v is (h, B, d_k)
 
         #calculate attention
         # Use einsum to rearrange dimensions from (h, B, d_k) to (h, d_k, B)
