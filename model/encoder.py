@@ -8,7 +8,11 @@ class Encoder(nn.Module):
     def __init__(self, d_model = 512, d_k = 64, d_v = 64, h = 8):
         super().__init__()
         self.self_attention_layer = SelfAttentionLayer(d_model, d_k, d_v, h)
-        self.feedForward_layer = nn.Linear(d_model, d_model)
+        self.feedForward_layer = nn.Sequential(
+                                    nn.Linear(d_model, 4*d_model),
+                                    nn.ReLU(),
+                                    nn.Linear(4*d_model, d_model)
+                                )
         self.layer_norm = nn.LayerNorm(d_model)
 
     def forward(self, x):
