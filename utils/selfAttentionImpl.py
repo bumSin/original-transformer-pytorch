@@ -6,23 +6,31 @@ import torch.nn.functional as F
 from einops import rearrange
 
 
+def applymask(scaled_score):
+    return scaled_score
+
+
 class SelfAttentionLayer(nn.Module):
-    def __init__(self, d_model, d_k, d_v, h):
+    def __init__(self, d_model, d_k, d_v, h, mask=False):
         super().__init__()
         self.d_model = d_model
         self.d_k = d_k
         self.d_v = d_v
         self.h = h
+        self.mask=mask
 
         self.wq = nn.Parameter(torch.randn(h, d_model, d_k))
         self.wk = nn.Parameter(torch.randn(h, d_model, d_k))
         self.wv = nn.Parameter(torch.randn(h, d_model, d_v))
         self.wo = nn.Parameter(torch.randn(d_k * h, d_model))
 
-    def forward(self, x):                 # x is (Batch x d_model)
+    def forward(self, x, y=None):        # x and y are (Batch x d_model)
+        if y is None:                    # For encoder blocks, x=y. For decoder blocks y is output of final encoder
+            y = x
+
         q = torch.matmul(x, self.wq)      # q is (h, B, d_k)   Every head will have it's own query vector
-        k = torch.matmul(x, self.wk)      # k is (h, B, d_k)
-        v = torch.matmul(x, self.wv)      # v is (h, B, d_k)
+        k = torch.matmul(y, self.wk)      # k is (h, B, d_k)
+        v = torch.matmul(y, self.wv)      # v is (h, B, d_k)
 
         #calculate attention
         # Use einsum to rearrange dimensions from (h, B, d_k) to (h, d_k, B)
@@ -33,6 +41,9 @@ class SelfAttentionLayer(nn.Module):
 
         # scale down by sqrt(d_k) i.e 8
         scaled_score = score / sqrt(self.d_k)
+
+        if self.mask:
+            scaled_score = applymask(scaled_score)
 
         # Softmaxing over every row in every head
         softmax = F.softmax(scaled_score, dim=2)  # h x B x B

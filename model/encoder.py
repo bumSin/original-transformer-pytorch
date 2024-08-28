@@ -1,7 +1,6 @@
-import torch
 from torch import nn
 
-from utils.layerImpls import SelfAttentionLayer
+from utils.selfAttentionImpl import SelfAttentionLayer
 
 
 class Encoder(nn.Module):
