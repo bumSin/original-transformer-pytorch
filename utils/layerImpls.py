@@ -9,8 +9,11 @@ from einops import rearrange
 class SelfAttentionLayer(nn.Module):
     def __init__(self, d_model, d_k, d_v, h):
         super().__init__()
-        self.d_model = d_model, self.d_k = d_k, self.d_v = d_v, self.h = h
-        # // TO DO: Update for multihead
+        self.d_model = d_model
+        self.d_k = d_k
+        self.d_v = d_v
+        self.h = h
+
         self.wq = nn.Parameter(torch.randn(h, d_model, d_k))
         self.wk = nn.Parameter(torch.randn(h, d_model, d_k))
         self.wv = nn.Parameter(torch.randn(h, d_model, d_v))

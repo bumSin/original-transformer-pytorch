@@ -22,3 +22,10 @@ class Encoder(nn.Module):
         residual_ff_out = self.layer_norm(ff_out + ff_in)
 
         return residual_ff_out
+
+# TEST CODE
+# enc = Encoder()
+# x = torch.randn(120, 512)
+#
+# y = enc(x)
+# print(f"y shape: {y.shape}")
