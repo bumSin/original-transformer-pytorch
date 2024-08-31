@@ -1,3 +1,14 @@
+Embeddings and Softmax
+"Transformer uses learned embeddings to convert the input tokens and output tokens to vectors of dimension d_model.
+It also uses learned linear transformation and softmax function to convert decoder output to predict next-token probabilities.
+
+It shares same weight matrix between the two embedding layers and the pre softmax linear transformation. In the embedding layers, we multiply those weights by sqrt(d_model)"
+
+Explanation:
+1. The embedding tensor before the encoder stack, the embedding tensor before the decoder stack, and the weight tensor of the linear layer that converts the final decoder vector into logits are the same tensor as all three tensors need to be of dimensions d_model x d_vocab and effectively perform the same function.
+2. hen you extract a subword's embedding from the embedding tensor before the encoder or decoder stacks, just multiply it with d_model ^ 0.5 before adding it to the positional encoding.
+
+
 Positional Embeddings
 
 Position embeddings are defined in paper as follows:

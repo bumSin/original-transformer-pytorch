@@ -1,6 +1,5 @@
 import torch
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def time_embedding(pos, d_model):
@@ -21,28 +20,30 @@ def time_embedding(pos, d_model):
 
     return merged
 
-# Define parameters
-d_model = 200 # Model dimension (must be even)
-pos = 500 # Define how many positions you want to visualise
-positions = torch.arange(0, pos, dtype=torch.float32)  # Example positions
+if __name__ == "__main__":
 
-# Calculate embeddings for different positions
-embeddings = [time_embedding(pos, d_model) for pos in positions]
+    # Define parameters
+    d_model = 200 # Model dimension (must be even)
+    pos = 500 # Define how many positions you want to visualise
+    positions = torch.arange(0, pos, dtype=torch.float32)  # Example positions
 
-# Convert embeddings to NumPy array
-embeddings_np = torch.stack(embeddings).numpy()
+    # Calculate embeddings for different positions
+    embeddings = [time_embedding(pos, d_model) for pos in positions]
 
-# Normalize embeddings for visualization
-# Here we assume embeddings are in the range [-1, 1]. Adjust normalization if needed.
-embeddings_min = embeddings_np.min()
-embeddings_max = embeddings_np.max()
-embeddings_normalized = (embeddings_np - embeddings_min) / (embeddings_max - embeddings_min)
+    # Convert embeddings to NumPy array
+    embeddings_np = torch.stack(embeddings).numpy()
 
-# Plot the embeddings as an image
-plt.figure(figsize=(10, 6))
-plt.imshow(embeddings_normalized, cmap='viridis', aspect='auto')
-plt.colorbar(label='Normalized Embedding Value')
-plt.xlabel('Embedding Dimension')
-plt.ylabel('Position')
-plt.title('Time Embeddings Visualization')
-plt.show()
+    # Normalize embeddings for visualization
+    # Here we assume embeddings are in the range [-1, 1]. Adjust normalization if needed.
+    embeddings_min = embeddings_np.min()
+    embeddings_max = embeddings_np.max()
+    embeddings_normalized = (embeddings_np - embeddings_min) / (embeddings_max - embeddings_min)
+
+    # Plot the embeddings as an image
+    plt.figure(figsize=(10, 6))
+    plt.imshow(embeddings_normalized, cmap='viridis', aspect='auto')
+    plt.colorbar(label='Normalized Embedding Value')
+    plt.xlabel('Embedding Dimension')
+    plt.ylabel('Position')
+    plt.title('Time Embeddings Visualization')
+    plt.show()

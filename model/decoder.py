@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-
 from utils.selfAttentionImpl import SelfAttentionLayer
 
 
@@ -32,9 +31,9 @@ class Decoder(nn.Module):
         return residual_ff_out
 
 # TEST CODE
-decoder = Decoder()
-x = torch.randn(120, 512)
-encoder_out = torch.randn(120, 512)
-
-y = decoder(x, encoder_out)
-print(f"y shape: {y.shape}")
+# decoder = Decoder()
+# x = torch.randn(120, 512)
+# encoder_out = torch.randn(120, 512)
+#
+# y = decoder(x, encoder_out)
+# print(f"y shape: {y.shape}")

@@ -18,13 +18,15 @@ class Transformer(nn.Module):
             *[Encoder() for _ in range(6)]
         )
 
-        self.decoders = nn.Sequential(
-            *[Decoder() for _ in range(6)]
-        )
+        # self.decoders = nn.Sequential(
+        #     *[Decoder() for _ in range(6)]
+        # )
+
+        self.decoders = Decoder()
 
         self.projection = nn.Linear(d_model, vocab_size)
         self.projection.weight.data = self.embedding.weight.data.T     # Sharing the weights
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):  # x.shape (Batch x vocab_size)
         embedding = self.embedding(x)  # embedding.shape Batch x d_model
@@ -36,7 +38,18 @@ class Transformer(nn.Module):
         shifted_embedding = shift_right(with_pos_embedding)
 
         decoder_out = self.decoders(shifted_embedding, encoder_out)
-        logits = torch.matmul(decoder_out, self.embedding.weight.T) + self.embedding.bias
+        logits = self.projection(decoder_out)
         prob_distribution = self.softmax(logits)
 
         return prob_distribution
+
+if __name__ == "__main__":
+    batch_size = 200
+    vocab_size = 1000
+    d_model = 512
+
+    sentence = torch.randn(batch_size, vocab_size)
+    transformer = Transformer(d_model, vocab_size, batch_size)
+
+    output = transformer(sentence)
+    print(output.shape)  # Batch_size * vocab_size
