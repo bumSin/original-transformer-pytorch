@@ -25,6 +25,7 @@ class MultiHeadAttentionImpl(nn.Module):
     def forward(self, query, key, value, mask=None):
         # query, key, value are 512 sequence vector which comes from either prev encoder or decoder
         # depending on this module is being used as self attention or cross attention
+        # Expected shape (batch_size, seq_len, d_model)
 
         batch_size = query.size(0)         # Batch is the first dimension in our convention
 
