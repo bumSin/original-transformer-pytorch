@@ -1,7 +1,13 @@
 # Transformer
 
-Embeddings and Softmax
-"Transformer uses learned embeddings to convert the input tokens and output tokens to vectors of dimension d_model.
+This repository contains my implementation of the transformer architecture proposed in the seminal paper "Attention is all you need" (you can find it here --> [Vaswani et al.](https://arxiv.org/abs/1706.03762)).
+
+![img_2.png](img_2.png)
+
+## Let's take a look at the components of a transformer:
+
+### Embeddings and Softmax <br>
+Transformer uses learned embeddings to convert the input tokens and output tokens to vectors of dimension d_model.
 It also uses learned linear transformation and softmax function to convert decoder output to predict next-token probabilities.
 
 It shares same weight matrix between the two embedding layers and the pre softmax linear transformation. In the embedding layers, we multiply those weights by sqrt(d_model)"
@@ -11,10 +17,9 @@ Explanation:
 2. hen you extract a subword's embedding from the embedding tensor before the encoder or decoder stacks, just multiply it with d_model ^ 0.5 before adding it to the positional encoding.
 
 
-Positional Embeddings
+### Positional Embeddings
 
 Position embeddings are defined in paper as follows:
-
 
 <img width="363" alt="image" src="https://github.com/user-attachments/assets/23d94f72-b641-43a9-a56e-ec205f3e9599">
 
