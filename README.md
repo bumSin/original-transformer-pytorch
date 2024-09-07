@@ -173,3 +173,101 @@ class EncoderBlock(nn.Module):
         return x
 
 ```
+
+## Decoder
+
+It has an extra layer of encoder-decoder attention
+And self attention is masked to prevent the model from looking forward while training.
+
+![img_9.png](img_9.png)
+
+```python
+
+class DecoderBlock(nn.Module):
+    def __init__(self, d_model, h, d_ff, dropout=0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttentionImpl(d_model, h, dropout)
+        self.cross_attn = MultiHeadAttentionImpl(d_model, h, dropout)
+        self.feedForward_layer = nn.Sequential(
+            nn.Linear(d_model, d_ff),           # d_model = 512; d_ff = 2024 in the paper
+            nn.ReLU(),
+            nn.Linear(d_ff, d_model)
+        )
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.norm3 = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)    # Why 3 layerNorms but only one dropout? Because unlike layernorm, dropout doesn't have any learnable params
+
+    def forward(self, x, encoder_out, src_mask=None, tgt_mask=None):      # Why two masks? I have explained here --> https://medium.com/@shubham.ksingh.cer14
+        # Masked Self Attention
+        self_attn_out =  self.self_attn(query = x, key = x, value = x, mask = tgt_mask)
+        x = x + self.dropout(self_attn_out)
+        x = self.norm1(x)
+
+        # Encoder-Decoder Attantion or Cross Attention
+        cross_attn_out = self.cross_attn(query = x, key = encoder_out, value = encoder_out, mask = src_mask)
+        x = x + self.dropout(cross_attn_out)
+        x = self.norm2(x)
+
+        # Feed forward
+        ff_out = self.feedForward_layer(x)
+        x = x + self.dropout(ff_out)
+        x = self.norm3(x)
+
+        return x
+
+class DecoderStack(nn.Module):
+    def __init__(self, num_layers, d_model, h, d_ff, dropout=0.1):
+        super().__init__()
+
+        self.layers = nn.ModuleList([
+            DecoderBlock( d_model, h, d_ff, dropout) for _ in range(num_layers)
+        ])
+
+    def forward(self, x, encoder_out, src_mask=None, tgt_mask=None):
+        for layer in self.layers:
+            x = layer(x, encoder_out, src_mask, tgt_mask)
+
+        return x
+```
+
+## Transformer Impl; Stitching it all together
+
+```python
+class Transformer(nn.Module):
+    def __init__(self, d_model, h, d_ff, src_vocab_size, tgt_vocab_size, dropout, num_layers = 6):
+        super().__init__()
+
+        self.src_embeddings = nn.Embedding(src_vocab_size, d_model)
+        self.tgt_embeddings = nn.Embedding(tgt_vocab_size, d_model)
+
+        self.pos_embeddings = PositionalEmbedding(d_model)
+
+        self.Encoders = EncoderStack(num_layers, d_model, h, d_ff, dropout)
+        self.Decoders = DecoderStack(num_layers, d_model, h, d_ff, dropout)
+
+        self.final_linear = nn.Linear(d_model, tgt_vocab_size)
+        # Using log softmax because nn.KLDivLoss() requires log probabilities
+        self.log_softmax = nn.LogSoftmax(dim=-1)            # Some people club these two layers and call it a generator
+
+
+    def forward(self, x_src, x_tgt, src_mask=None, tgt_mask=None):  # x.shape (Batch x seq_len)
+
+        # Convert source and target sentence (vector of word indices in vocab vector) into embeddings
+        # src = tgt while training same language tasks
+        src_embedded = self.src_embeddings(x_src)                   # expected dim: batch_size, seq_len, d_model
+        tgt_embedded = self.tgt_embeddings(x_tgt)
+
+        src_embedded = self.pos_embeddings(src_embedded)             # expected dim: batch_size, seq_len, d_model
+        tgt_embedded = self.pos_embeddings(tgt_embedded)
+
+        encoder_output = self.Encoders(src_embedded)
+        decoder_output = self.Decoders(tgt_embedded, encoder_output, src_mask, tgt_mask)    # Expected dim: batch_size, seq_len, d_model
+
+        tgt_vocab_size_logits = self.final_linear(decoder_output)     # Expected dim: batch_size, seq_len, tgt_vocab_size
+        # Converting logits to probabilities
+        prob_distribution = self.log_softmax(tgt_vocab_size_logits)
+
+        return prob_distribution
+```
+
