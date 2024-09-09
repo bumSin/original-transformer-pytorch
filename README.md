@@ -271,3 +271,7 @@ class Transformer(nn.Module):
         return prob_distribution
 ```
 
+## Tutorial Styled Videos 
+
+I ended up making a few videos explaining Attention in detail. Have a look
+https://youtu.be/rbQmveWqu-s?si=BIRDWSl_Im1T1LQM
