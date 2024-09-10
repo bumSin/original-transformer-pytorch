@@ -273,5 +273,9 @@ class Transformer(nn.Module):
 
 ## Tutorial Styled Videos 
 
-I ended up making a few videos explaining Attention in detail. Have a look
-https://youtu.be/rbQmveWqu-s?si=BIRDWSl_Im1T1LQM
+I ended up making a few videos which could help you understand transformers:
+* [Attention is all you need paper walkthrough](https://youtu.be/DYqAetygUTE?si=BnQMYnXp4bMMEtyX)
+* [Deep dive into Attention mechanism of a Transformer](https://youtu.be/rbQmveWqu-s?si=KPxJnguqnysdpuT8)
+* [Implementing Multihead Attention in a Transformer](https://youtu.be/IvPbb4ulRuA?si=tNQVUmaiM7cDD_3h)
+
+
