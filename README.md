@@ -2,7 +2,7 @@
 
 This repository contains my implementation of the transformer architecture proposed in the seminal paper "Attention is all you need" [Vaswani et al.](https://arxiv.org/abs/1706.03762)
 
-![img_2.png](img_2.png)
+![img_2.png](readme_images/img_2.png)
 
 ## Let's take a look at the components of a transformer:
 
@@ -32,10 +32,10 @@ You can find the code to implement this and visualise in the file visualising_po
 I really enjoyed studying about attention. I ended up publishing my study notes in a blog here --> https://medium.com/@shubham.ksingh.cer14/understanding-attention-in-transformers-with-code-1ddd6c07abf4
 
 Attention is described in paper like:
-![img_4.png](img_4.png)
+![img_4.png](readme_images/img_4.png)
 
 They hinted at implementation by providing following image:
-![img_5.png](img_5.png)
+![img_5.png](readme_images/img_5.png)
 
 Converting this image to functional code looks something like this:
 
@@ -67,7 +67,7 @@ def scaled_dot_product_attention(query, key, value, mask=None, dropout=None):
 
 ## Multihead Attention
 Paper describes multi head attention as follows:
-![img_3.png](img_3.png)
+![img_3.png](readme_images/img_3.png)
 
 Here is my implementation of Multi-head Attention layer.
 
@@ -124,14 +124,14 @@ The layer calculates the attention as decribed in paper by this formula
 
 ### Custom Learning Rate Schedule
 Paper describes lr as follows
-![img_6.png](img_6.png)
+![img_6.png](readme_images/img_6.png)
 
 A graph makes this cryptic formula much more decipherable
-![img_7.png](img_7.png)
+![img_7.png](readme_images/img_7.png)
 
 ## Encoder
 
-![img_8.png](img_8.png)
+![img_8.png](readme_images/img_8.png)
 Image source: https://jalammar.github.io/illustrated-transformer/
 
 Only if there was a model which can translate this image directly to python/pytorch code, huh ;P
@@ -179,7 +179,7 @@ class EncoderBlock(nn.Module):
 It has an extra layer of encoder-decoder attention
 And self attention is masked to prevent the model from looking forward while training.
 
-![img_9.png](img_9.png)
+![img_9.png](readme_images/img_9.png)
 
 ```python
 
