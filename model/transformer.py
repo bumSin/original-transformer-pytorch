@@ -49,8 +49,8 @@ class Transformer(nn.Module):
         return prob_distribution
 
 if __name__ == "__main__":
-    src_vocab_size = 1000
-    tgt_vocab_size = 1100
+    src_vocab_size = 32000
+    tgt_vocab_size = 32000
     d_model = 512
     num_layers = 6
     h = 8
@@ -67,3 +67,12 @@ if __name__ == "__main__":
 
     output = transformer(x_src, x_tgt, src_mask=None, tgt_mask=None)
     print(output.shape)  # Expected: Batch_size * seq_len * tgt_vocab_size
+
+
+    def count_parameters(model):
+        return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+
+    # Example usage:
+    total_params = count_parameters(transformer)
+    print(f"Total number of trainable parameters: {total_params}")
