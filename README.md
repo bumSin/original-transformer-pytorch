@@ -2,9 +2,24 @@
 
 This repository contains my implementation of the transformer architecture proposed in the seminal paper "Attention is all you need" [Vaswani et al.](https://arxiv.org/abs/1706.03762)
 
-![img_2.png](readme_images/img_2.png)
+## Supporting material
+In this video, I walk through the paper and explain the overall transformer architecture.
+
+[![Watch the video](https://img.youtube.com/vi/DYqAetygUTE/0.jpg)](https://youtu.be/DYqAetygUTE)
+
+I ended up making a two more videos where I talk about **Attention mechanism** in detail:
+* [Deep dive into Attention mechanism of a Transformer](https://youtu.be/rbQmveWqu-s?si=KPxJnguqnysdpuT8)
+* [Implementing Multihead Attention in a Transformer](https://youtu.be/IvPbb4ulRuA?si=tNQVUmaiM7cDD_3h)
+
+And here are my study notes on **Attention** in form of a blog:
+https://medium.com/@shubham.ksingh.cer14/understanding-attention-in-transformers-with-code-1ddd6c07abf4
+
 
 ## Let's take a look at the components of a transformer:
+
+![img_2.png](readme_images/img_2.png)
+
+
 
 ### Embeddings and Softmax <br>
 Transformer uses learned embeddings to convert the input tokens and output tokens to vectors of dimension d_model.
@@ -270,12 +285,3 @@ class Transformer(nn.Module):
 
         return prob_distribution
 ```
-
-## Tutorial Styled Videos 
-
-I ended up making a few videos which could help you understand transformers:
-* [Attention is all you need paper walkthrough](https://youtu.be/DYqAetygUTE?si=BnQMYnXp4bMMEtyX)
-* [Deep dive into Attention mechanism of a Transformer](https://youtu.be/rbQmveWqu-s?si=KPxJnguqnysdpuT8)
-* [Implementing Multihead Attention in a Transformer](https://youtu.be/IvPbb4ulRuA?si=tNQVUmaiM7cDD_3h)
-
-
